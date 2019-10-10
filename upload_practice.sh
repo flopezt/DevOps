@@ -1,5 +1,5 @@
 #bin/bash
 
-git add *
-git commit -m "subir practicas"
+git pull
 git push
+git commit -m "subir practicas"
