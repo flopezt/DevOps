@@ -1,0 +1,210 @@
+    1  ip a
+    2  ip a
+    3  man ip
+    4  ip link set eno1 up
+    5  sudo ip link set eno1 up
+    6  ip a
+    7  sudo systemctl restart network
+    8  sudo systemctl restart networkd
+    9  ip -a 4
+   10  ip -a 
+   11  dhclient
+   12  sudo dhclient
+   13  ip a
+   14  systemctl restart networkmanager
+   15  systemctl restart networkmanagerd
+   16  ps -ef
+   17  docker
+   18  docker ps
+   19  sudo docker pull prometeus1985/get-started
+   20  sudo docker pull bitnami/prometheus
+   21  docker images
+   22  sudo docker images
+   23  docker run -d -p 9090:9090 bitnami/prometheus
+   24  sudo docker run -d -p 9090:9090 bitnami/prometheus
+   25  docker ps
+   26  sudo docker ps
+   27  sudo dhclient
+   28  sudo su -
+   29  docker run hell-world
+   30  sudo docker run hell-world
+   31  sudo docker run hello-world
+   32  docker run -ti centos
+   33  sudo docker run -ti centos
+   34  docker pull elk/selb
+   35  docker pull elk
+   36  docker search elk
+   37  sudo docker search elk
+   38  docker pull sebp/elk
+   39  sudo docker pull sebp/elk
+   40  docker ps
+   41  sudo cat /etc/group | grep docke
+   42  sudo cat /etc/group | grep devo
+   43  sudo usermod -a -G docker devops
+   44  id devops
+   45  docker ps
+   46  bash
+   47  docker
+   48  docker images
+   49  docker search sebp/elk
+   50  docker pull sebp/elk
+   51  ifconfig
+   52  sudo ifconfig
+   53  exit
+   54  docker ps
+   55  docker kill 
+   56  docker kill 357a67e8a717
+   57  docker ps
+   58  docker kill d6b17b818e09
+   59  docker ps
+   60  docker search mysql
+   61  docker run -d -p 5601:5601 -p 9200:9200 -p 5044:5044 -it --name elk sebp/elk
+   62  docker ps
+   63  docker top a3a2e156aca8
+   64  docker stat a3a2e156aca8
+   65  docker stats a3a2e156aca8
+   66  docker
+   67  pwd
+   68  mkdir practicas
+   69  cd practicas/
+   70  vi Dockerfile
+   71  exit
+   72  docker search wordpress
+   73  docker pull wordpress
+   74  docker pull mysql
+   75  docker pull centos
+   76  docker run centos
+   77  docker ps
+   78  docker run ti centos
+   79  docker run -ti centos
+   80  docker ps
+   81  docker pull ubuntu
+   82  docker run -ti ubuntu
+   83  exit
+   84  docker pull sebp/elk
+   85  docker run sebp/elk
+   86  docker images
+   87  docker 
+   88  docker ps
+   89  sudo sysctl -w vm.max_map_count=262144
+   90  docker run sebp/elk
+   91  docker run -d sebp/elk
+   92  docker run -d -p 5601:5601 -p 9200:9200 -p 5044:5044 -it --name elk sebp/elk
+   93  exit
+   94  docker
+   95  docker --name --help
+   96  sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+   97  sudo chmod +x /usr/local/bin/docker-compose
+   98  docker-compose --version
+   99  base=https://github.com/docker/machine/releases/download/v0.16.0 &&   curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine &&   sudo mv /tmp/docker-machine /usr/local/bin/docker-machine &&   chmod +x /usr/local/bin/docker-machine
+  100  docker-machine --version
+  101  sudo apt search citrix-reciever
+  102  sudo apt search citrix
+  103  docker swarm
+  104  docker swarm init
+  105  cd ..
+  106  cd Descargas/
+  107  ls
+  108  base=https://github.com/docker/machine/releases/download/v0.16.0 &&   curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine &&   sudo mv /tmp/docker-machine /usr/local/bin/docker-machine && ;
+  109  sudo apt-get -f install
+  110  if ;
+  111  ip -a
+  112  ip a
+  113  apt update
+  114  sudo apt update
+  115  sudo apt install nfs-common
+  116  mkdir /srv/docker
+  117  sudo mkdir /srv/docker
+  118  echo '192.168.20.219:/srv/export /srv/docker nfs defaults,_netdev,noauto        0        0' >> /etc/fstab
+  119  sudo echo '192.168.20.219:/srv/export /srv/docker nfs defaults,_netdev,noauto        0        0' >> /etc/fstab
+  120  sudo su
+  121  mount -a
+  122  sudo mount-a
+  123  sudo mount -a
+  124  mount
+  125  ls /srv/docker/
+  126  cat /etc/fstab 
+  127  showmount 192.168.20.219
+  128  showmount -e 192.168.20.219
+  129  sudo su -
+  130  mount -a
+  131  sudo mount -a
+  132  mount
+  133  ls /srv/docker/
+  134  touch /srv/docker/fernando
+  135  ls /srv/docker/
+  136  cat txt
+  137  cat /srv/docker/txt
+  138  docker swarm join --token SWMTKN-1-4ixzlr51docazyfyogwxhe0do05rxer5xed4f5bglse3lrm3hd-9s74mgt31fakqhwcqi2wx3g1q 192.168.20.220:2377
+  139  docker swarm leave
+  140  docker swarm leave --force
+  141  docker swarm join --token SWMTKN-1-4ixzlr51docazyfyogwxhe0do05rxer5xed4f5bglse3lrm3hd-9s74mgt31fakqhwcqi2wx3g1q 192.168.20.220:2377
+  142  exit
+  143  ls
+  144  mkdir flopezt
+  145  cd flopezt/
+  146  vi Dockerfile
+  147  ls
+  148  cat Dockerfile
+  149  mv Dockerfile Dockerfile_original
+  150  mv Dockerfile_v2 Dockerfile
+  151  vi Dockerfile
+  152  exit
+  153  cat /etc/fstab
+  154  ls /srv/docker/
+  155  mount
+  156  mount -a
+  157  sudo mount -a
+  158  mount
+  159  ls /srv/docker/
+  160  docker swarm 
+  161  docker swarm join-token
+  162  docker swarm init
+  163  sudo docker swarm init
+  164  docker
+  165  docker swarm init
+  166  ls /srv/docker/
+  167  docker swarm join --token SWMTKN-1-4ixzlr51docazyfyogwxhe0do05rxer5xed4f5bglse3lrm3hd-9s74mgt31fakqhwcqi2wx3g1q 192.168.20.220:2377
+  168  docker ps
+  169  docker 
+  170  sudo systemctl status docker
+  171  sudo systemctl start docker
+  172  sudo systemctl status docker
+  173  docker swarm join --token SWMTKN-1-4ixzlr51docazyfyogwxhe0do05rxer5xed4f5bglse3lrm3hd-9s74mgt31fakqhwcqi2wx3g1q 192.168.20.220:2377
+  174  docker node
+  175  docker node inspect
+  176  docker node ls
+  177  hostname --fqdn
+  178  hostnamectl set-hostname fernando.jjf.pue
+  179  hostname --fqdn
+  180  docker node ls
+  181  ls /srv/docker/
+  182  cat /srv/docker/txt 
+  183  sudo vi /etc/hosts
+  184  sudp apt install openssh-server
+  185  sudo apt install openssh-server
+  186  docker node ls
+  187  docker stack
+  188  ls /srv/docker/mysql/
+  189  ls /srv/docker/wordpress/
+  190  ls /srv/docker/mysql/
+  191  docker node ls
+  192  docker service ls
+  193  docker service rm wpps
+  194  docker service rm wpps*
+  195  docker stack rm wpps*
+  196  docker stack rm wpps
+  197  docker stack deploy -c /srv/docker/wordpress/wp.yml 
+  198  docker stack deploy -c /srv/docker/wordpress/wp.yml wpps
+  199  ls /srv/docker/mysql/
+  200  docker service logs wpps
+  201  docker service logs wpps_db
+  202  HISTORYÇ
+  203  history
+  204  docker stack deploy -c /srv/docker/wordpress/wp.yml wpps
+  205  cat /srv/docker/wordpress/wp.yml
+  206  docker stack deploy -c /srv/docker/wordpress/wp.yml wpps
+  207  ls
+  208  cd flopezt/
+  209  ls
+  210  history > historial_practica_docker_stack
