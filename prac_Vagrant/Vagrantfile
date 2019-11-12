@@ -1,0 +1,35 @@
+$sshinit = <<SCRIPT
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDgnHQeCNO1PSCR6r3xvW/cWWBeyNvDwOSbAc2O9gNKQfL7rWuIkeUQZJK0uGWEbkk1J9VnPE4aN2nRv9OkAF1lMk28jFuHb3DwB8ZzaR4AFoAqgdVsXKP2TzSBSf5lglCR+ix944Yc+MSRsWG7Bi5IJm4xelwe5kt8GK48qrOUDqVFlzHp52lF/K+s+BM1iC9/L2/yq5G1EYaxabafr9IQntfGYWAQW6xdgU2QyvCGA5jCGV7GdQ4glGnQfeG8VCNgpVfvwoHvxOeSOdElij0pLEigWYJsArt+q11EQ9RonqGMfhnCI9gYRvZ8OQG1GSA0lO9Px1zAoD1huXx1IWqZ devops@fernando.jjf.pue" >> /home/vagrant/.ssh/authorized_keys
+
+mkdir -m 0700 /root/.ssh
+cat /home/vagrant/.ssh/authorized_keys > /root/.ssh/authorized_keys
+
+SCRIPT
+# Buster, please
+Vagrant.configure(2) do |config|
+  config.vm.define "debian1" do |config|
+    config.vm.box = "debian/buster64"
+    config.vm.hostname = "debian1"
+    config.vm.provision "shell", inline: $sshinit
+  end
+
+  config.vm.define "debian2" do |config|
+    config.vm.box = "debian/buster64"
+    config.vm.hostname = "debian2"
+    config.vm.provision "shell", inline: $sshinit
+  end
+
+  config.vm.define "centos1" do |config|
+    config.vm.box = "centos/7"
+    config.vm.hostname = "centos1"
+    config.vm.provision "shell", inline: $sshinit
+  end
+
+  config.vm.define "ubuntu1" do |config|
+    config.vm.box = "ubuntu/bionic64"
+    config.vm.hostname = "ubuntu1"
+    config.vm.provision "shell", inline: $sshinit
+  end
+
+
+end

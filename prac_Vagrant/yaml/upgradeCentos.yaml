@@ -1,0 +1,6 @@
+- hosts: centos1
+  tasks:
+    - name: Safe Upgrade
+      become: true
+      yum:  
+        upgrade=yes

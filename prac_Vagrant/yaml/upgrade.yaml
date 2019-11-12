@@ -1,0 +1,15 @@
+- hosts: all
+  tasks:
+    - name: Safe Upgrade
+      become: true
+      when: (ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu")
+      apt:  
+        upgrade=yes
+- hosts: all
+  tasks:
+    - name: Safe Upgrade
+      become: true
+      when: ansible_facts['distribution'] == "Centos"
+      yum: 
+        name='*' 
+        stable=latest
