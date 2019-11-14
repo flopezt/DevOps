@@ -1,0 +1,6 @@
+- name: Safe Upgrade
+  become: true
+  when: ansible_facts['distribution'] == "Centos"
+  yum: 
+    name='*' 
+    stable=latest
