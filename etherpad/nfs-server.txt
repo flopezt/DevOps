@@ -1,0 +1,64 @@
+Montar Servidor NFS:
+
+(Lado del Servidor)
+
+apt update && apt install nfs-kernel-server && mkdir /srv/export && echo '/srv/export *(rw,no_root_squash,no_subtree_check) ' >> /etc/exports && service nfs-kernel-server restart && chmod 1777 /srv/export
+
+
+Si eres fino:
+    
+/srv/export IPCOMPI1(rw,no_root_squash,no_subtree_check) IPCOMPI2 (rw,no_root_squash,no_subtree_check)  IPTUMISMO (rw,no_root_squash,no_subtree_check)
+
+
+
+
+---------------------
+
+En todos los nodos:
+    
+apt update 
+apt install nfs-common
+mkdir /srv/docker
+echo 'IPDELSERVIDORNFS:/srv/export /srv/docker nfs defaults,_netdev,hard,intr        0        0' >> /etc/fstab
+mount -a
+## montar a mano: mount -t nfs 192.168.20.218:/srv/export /srv/docker
+
+Ejemplo de volúmen NFS en docker-compose / docker stack:
+    
+volumes:
+  example:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.40.0.199,nolock,soft,rw"
+      device: ":/docker/example"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

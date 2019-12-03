@@ -1,0 +1,76 @@
+	* Aixeca un compose amb docker-compose o swarm
+		* Backends:
+			* Redis
+			* Mariadb
+			* Heu trobat algun compose que ja faci això per tal de fer més via? :-)
+				* 
+		* Frontend:
+			* 2 instàncies de php amb sessions al redis
+				* Si pots, un codi teu, wordpress o el que et faci il·lusió, sinó:
+					* https://github.com/kpeiruza/docker-php-mysql-redis
+
+Ja ho tens?
+Si és així, aixeca el teu propi contenidor de "Wordpress" amb aquestes característiques amb Docker Swarm (d'un sol node).
+
+---------------------
+version: '3.3'
+
+services:
+  redis:
+    image: library/redis
+
+  mysql:
+    image: library/mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "pepito"
+      MYSQL_DATABASE: "app"
+      MYSQL_USER: "username"
+      MYSQL_PASSWORD: "pepita"
+    volumes:
+      - db:/var/lib/mysql
+
+  app:
+    build: ./docker-php-mysql-redis/
+    ports:
+#      - 8000:80
+      - 80
+# Mapeig a 32768, 32769 ....
+volumes:
+  db:
+--------------------------------------------
+Stack amb app=3 rèpliques:
+    
+version: '3.3'
+  
+services:
+  redis:
+    image: library/redis
+
+  mysql:
+    image: library/mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "pepito"
+      MYSQL_DATABASE: "app"
+      MYSQL_USER: "username"
+      MYSQL_PASSWORD: "pepita"
+    volumes:
+      - db:/var/lib/mysql
+  app:
+    image: kpeiruza/php-mysql-redis:1.0
+    ports:
+      - 8000:80
+    deploy:
+      replicas: 3
+      endpoint_mode: vip
+
+volumes:
+  db:
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,93 @@
+ Presentación DevOps: https://docs.google.com/presentation/d/1haMNMBrQzLHunsWnSXNQhxtS8XEoo5KbPRkSzpLIWsY/edit#slide=id.g436c706b33_0_81
+Elección del Libro: https://devops-2019-4t.pad.floss.cat/p/vota-libro
+Objectius de la certificació: https://www.lpi.org/our-certifications/exam-701-objectives
+Test: https://devops-2019-4t.pad.floss.cat/p/test
+Moodle (tests y tal): https://lms.pue.es
+
+	* Contenidos:
+		* Docker: https://devops-2019-4t.pad.floss.cat/p/docker ++++++++++++++++++++++++
+			* Montar NFS para Storage de Contenedores: https://devops-2019-4t.pad.floss.cat/p/nfs-server
+		* Dockers de Wordpress dels Alumnes: 
+		*  https://devops-2019-4t.pad.floss.cat/p/dockerfile-wordpress 
+		* Docker-compose: https://devops-2019-4t.pad.floss.cat/p/docker-compose ++
+		* Concentración de Logs con ELK https://devops-2019-4t.pad.floss.cat/p/ELK <--- Continuamos  ++++
+		* Docker-machine en 20 minutos: https://devops-2019-4t.pad.floss.cat/p/docker-machine <---- Pendiente
+		* Kubernetes: https://devops-2019-4t.pad.floss.cat/p/k8s +++++++++
+		* Práctica de K8s a lo gore: https://devops-2019-4t.pad.floss.cat/p/k8s-like-a-pro 
+		* Jenkins https://devops-2019-4t.pad.floss.cat/p/jenkins +++++++++++
+		* Vagrant: https://devops-2019-4t.pad.floss.cat/p/Vagrant ++
+		* Ansible: https://devops-2019-4t.pad.floss.cat/p/ansible  ++++++++
+		* git: https://devops-2019-4t.pad.floss.cat/p/git ++++++++
+		* Kubernetes Environment per a 3ers: https://devops-2019-4t.pad.floss.cat/p/k8s-environment
+		* Laboratori "compose // swarm": https://devops-2019-4t.pad.floss.cat/p/swarm-lab
+
+Avuí "acabeu" ansible
+Propera sessió: 1h de GIT
+Després, tornem a aixecar JenkiF8aArns (a Kubernetes). Caldrà IP pública per a integrar com cal amb GitHub
+
+
+
+Gent de Kubernetes que no vulgui fer Jenkins:  ++
+Practicar Dockerfiles (docker build):+
+Fer amb docker-compose: Redmine->Keycloak->OpenLDAP
+
+
+Free k8s always on: https://kubesail.com
+
+
+
+
+qSjX4vVhV0
+printf $(kubectl get secret --namespace default jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
+
+-------------------------------------------------------
+
+Inicializar Helm3:
+    
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | sudo bash
+helm repo add stable https://kubernetes-charts.storage.googleapis.com
+helm repo update
+helm pull stable/nginx-ingress
+# Descomprime, sin tocar nada, funciona:
+    helm install nginx-ingress stable/nginx-ingress --namespace kube-system
+# Vamos haciendo kubectl get svc -n kube-system  para ver qué IP externa nos pone en el balanceador
+helm pull stable/jenkins
+# Descomprimimos, editamos el values y:
+	Habilitamos ingress
+	Modificamos nombre de host en las sección ingress y le metemos en "annotations" para que busque nuestro ingress controller
+	
+	
+  ingress:
+    enabled: true
+    # For Kubernetes v1.14+, use 'networking.k8s.io/v1beta1'
+    apiVersion: "extensions/v1beta1"
+    labels: {}
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+    # Set this path to jenkinsUriPrefix above or use annotations to rewrite path
+    # path: "/jenkins"
+    # configures the hostname e.g. jenkins.example.com
+    hostName: jenkins.34.76.169.170.nip.io
+
+-------------
+
+helm install jenkins stable/jenkins -f values.yaml
+
+Ver el password de tu Jenkins (user=admin):
+kubectl get secrets jenkins -o jsonpath='{.data.jenkins-admin-password}' | base64 --decode; echo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

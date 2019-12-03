@@ -1,0 +1,73 @@
+	1. Jenkins a Katacoda: 
+		2. Jenkins executant dockers:
+			3. https://www.katacoda.com/courses/cicd/build-docker-images-using-jenkins +++++++++++++
+			3. Fes el mateix amb docker run en local ( docker run --user 1000:999 --name jenkins -d -v /var/run/docker.sock:/var/run/docker.sock -v /srv/jenkins:/var/jenkins_home -p 8080:8080 jenkins/jenkins )++
+		2.  Pipelines amb Jenkins:
+			3. https://www.katacoda.com/oliverveits/scenarios/jenkins-pipelines-hello-world +
+			3. El mateix en local
+		2. Jenkins desplegat amb Helm, Prometheus i pipelines:
+			3. https://www.katacoda.com/sylus/courses/kubernetes-fundamentals-2/module-6 +
+			3. El mateix a Google cloud o Scaleway o kubeadm si et dius Jose
+	1. Comprendre Stage, Step, Node:
+		2. Crea Freestyle Projects amb dos steps d'execució "shell" per a fer un "build" de Docker
+		2. Freestyle per a validar l'anterior "build".
+		2. Freestyle per a enviar la imatge Docker generada al repositori d'internet
+	1. Modifica el primer projecte per tal que xucli el codi d'un repositori GIT
+	1. Desplega el Jenkins a Google Cloud
+	1. Crea un Pipeline que cridi als 3 builds anteriors
+		2. Utilitza el plugin de GitHub per tal de que es dispari el pipeline cada cop que hi hagi una nova versió a GitHub (WebHooks!!!)
+	1. Clona el repositori emprat en l'anterior pas
+	1. Reescriu tot el que has fet al pas 2 directament a un Jenkinsfile i crea un Pipeline amb SCM per tal que es configuri en base a aquest arxiu Jenkinsfile del GIT. Pots emprar Blue-Ocean per a la creació del Pipeline
+
+
+--------------------------------------------------------
+
+pipeline {
+   agent {
+       label "mietiqueta"
+   }
+
+   stages {
+      stage('Build') {
+         steps {
+            // Get some code from a GitHub repository
+            git 'https://github.com/jglick/simple-maven-project-with-tests.git'
+            container('centos') {
+            // Run Maven on a Unix agent.
+                sh "yum --version"
+            }
+            // To run Maven on a Windows agent, use
+            // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+         }
+
+         post {
+            // If Maven was able to run the tests, even if some of the test
+            // failed, record the test results and archive the jar file.
+            success {
+
+               sh "echo Funciona"
+            }
+         }
+      }
+      stage('Test') {
+         steps {
+            // Get some code from a GitHub repository
+            // Run Maven on a Unix agent.
+            sh "echo Soy un test"
+
+            // To run Maven on a Windows agent, use
+            // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+         }
+
+      }
+   }
+}
+
+---------------------------------------------------------------
+1) Te creas un repo y le metes un "Jenkinsfile" en la raíz
+2) Te vas al jenkins (blue-ocean) y le añades un pipeline 
+
+
+
+
+

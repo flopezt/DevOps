@@ -1,0 +1,121 @@
+Què ha de tindre tot cluster K8s a entregar?
+	* Connectivitat amb l'exterior: Ingress Controller. Estalviarem IPs i podem sortejar la manca de serveis tipus "LoadBalancer" de Kubernetes fora de Clouds i OpenStack
+		* Tindrem certificats propis o de LetsEncrypt?
+			* Propis:
+				* nginx-ingress
+					* helm install nginx-ingress stable/nginx-ingress -n kube-system
+				* traefik
+			* LetsEncrypt
+				* Nginx-ingress + Cert-manager
+				* Traefik
+	* Concentració de Logs
+		* Storage i visualització:
+			* ELK
+			* Graylog: el preferit dels experts en Logs que coneix el profe
+		* Recolectors:
+			* Fluentd
+			* Filebeat
+			* Logspout
+		* Opció recomanada per "compatibilitat" i popularitat: fluentd + ELK
+	* Concentració de mètriques i alerting
+		* Prometheus + Alertmanager + Grafana
+	* Backends més populars:
+		* Redis (HA)
+		* MySQL:
+			* MariaDB-Galera cluster
+			* MySQL master-slave "stable/mysql" "stable/mariadb"
+			* Percona
+		* Postgres
+		* MongoDB
+		* Kafka
+	* CI/CD:
+		* Pipelines:
+			* Jenkins
+		* Artifact Storage:
+			* Nexus
+			* Artifactory
+	* Gestió de Secrets:
+		* Hashicorp Vault
+	* Backups amb Kubernetes:
+		* Velero
+	* Object Storage:
+		* Minio
+
+
+
+
+
+	1. Desplegar "cluster" en local amb Kubeadm amb Calico (veure link a anterior PAD). Ojo amb el rang de xarxa per defecte de Calico.
+	1. Desplegar Traefik 1.7 o Nginx-ingress com a daemonset, "a pelo", res de Helm (veure link anterior PAD)
+	1. Crea el "provisioner" de volums locals
+	1. Instal·la Helm
+		2. Desplega el provisionador de volums "nfs-client"
+		2. Prometheus-Operator
+		2. Elastic-stack (elasticsearch-client + cluster)
+		2. Fluentd -> Elasticsearch
+		2. Kibana (amb autenticació al Nginx-ingress o al Traefik)
+		2. Redis o Redis-HA exportant mètriques a Prometheus
+		2. Mariadb exportant mètriques a Prometheus
+		2. Wordpress
+		2. Contenidor amb app "comptador de visites" que tiri del Redis desplegat amb Helm
+ 
+ 
+ 
+Traefik as ds: 
+	1. kubectl apply -f https://raw.githubusercontent.com/containous/traefik/v1.7/examples/k8s/traefik-ds.yaml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

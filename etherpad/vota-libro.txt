@@ -1,0 +1,46 @@
+	* https://www.packtpub.com/virtualization-and-cloud/devops-kubernetes-second-edition  +++
+		* Héctor Moreno
+		* Cristian Ramirez
+		* Inma Blanco
+		* Biju Seoane
+		* Jose I Santoyo
+		* Fernando López
+		* Salvador Ibiza
+	* https://www.packtpub.com/application-development/mastering-kubernetes-second-edition  ++
+		* Llorenç
+		* Víctor Ozaes
+		* Salvador Ibiza
+	* https://www.packtpub.com/virtualization-and-cloud/getting-started-kubernetes-third-edition  
+		* 
+	* https://www.packtpub.com/virtualization-and-cloud/introduction-devops-kubernetes  +
+		* Héctor Moreno
+		* Mario Izaguirre
+		* Toni Sanchez
+	* https://www.packtpub.com/virtualization-and-cloud/mastering-ansible-third-edition ++
+		* Llorenç
+		* Cristian Ramirez
+		* Fernando López
+
+	
+	* EBOOK (2 ebooks, si suena la flauta, 3 < 36€): ++++
+		* Llorenç
+		* Cristian Ramirez
+		* Víctor Ozaes
+		* Luis D. López
+		* Oriol
+		* Rubén
+	* PAPEL (1 sólo libro de menos de 36€):
+		* 
+
+Altres llibres ( El profe recomana de Jenkins & docker, i d'Ansible):
+	* https://www.packtpub.com/eu/virtualization-and-cloud/continuous-delivery-docker-and-jenkins-second-edition +
+		* Víctor Ozaes
+		* Biju Seoane
+		* Inma Blanco
+		* Jose Miguel Anton
+		* Fernando López
+		* Luis D. López
+
+
+
+

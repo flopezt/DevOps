@@ -1,0 +1,157 @@
+705.2 Log Management and Analysis (weight: 4)
+Description: Candidates should understand the role of log files in operations and troubleshooting. They should be able to set up centralized logging infrastructure based on Logstash to collect and normalize log data. Furthermore, candidates should understand how Elasticsearch and Kibana help to store and access log data.
+Key Knowledge Areas:
+	* Understand how application and system logging works
+	* Understand the architecture and functionality of Logstash, including the lifecycle of a log message and Logstash plugins
+	* Understand the architecture and functionality of Elasticsearch and Kibana in the context of log data management (Elastic Stack)
+	* Configure Logstash to collect, normalize, transform and store log data
+	* Configure syslog and Filebeat to send log data to Logstash
+	* Configure Logstash to send email alerts
+	* Understand application support for log management
+The following is a partial list of the used files, terms and utilities:
+	* logstash
+	* input, filter, output
+	* grok filter
+	* Log files, metrics
+	* syslog.conf
+	* /etc/logstash/logstash.yml
+	* /etc/filebeat/filebeat.yml
+--------------------------------------------
+CROQUIS DEL SETUP: 
+	* ELK Stack: https://logz.io/learn/complete-guide-elk-stack/
+	* Filebeat: https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-overview.html
+
+Tutorial para echar un ojo a configuraciones de GROK: https://logz.io/blog/logstash-grok/
+--------------------------------------------
+Referencias en Internet:
+docker
+	* Filebeat 2 ElasticSearch & Kibana: 
+		* https://logz.io/blog/filebeat-tutorial/
+		* https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-getting-started.html
+		* https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-configuration.html
+		Ver: https://www.elastic.co/guide/en/elastic-stack-get-started/6.6/get-started-elastic-stack.html#logstash-setup
+		
+Alertas de correo con Logstash: https://www.elastic.co/guide/en/logstash/current/plugins-outputs-email.html
+
+No entra: alertas directamente con ElasticSearch: https://engineeringblog.yelp.com/2015/10/elastalert-alerting-at-scale-with-elasticsearch.html
+
+Depuración y construcción de filtros GROK para nuestro logstash:
+
+Referencias en el tutorial:
+	* https://grokdebug.herokuapp.com/
+	* http://grokconstructor.appspot.com/do/match
+	* https://github.com/logstash-plugins/logstash-patterns-core/tree/master/patterns
+
+FILTROS PARA LOGSTASH: https://clouding.io/kb/filtros-para-logstash/
+
+-------------------------------------------
+
+ELK:
+
+Clona el GIT de Stacks del profe si aún no lo has hecho: https://github.com/kpeiruza/docker-stacks +++++++++++
+	1. Configura y despliega el Stack de ELK (logspout-elk) para que:+ ++++++++++++
+		2. Accedas a Kibana a través del Traefik (LOGS_URL = kibana.tuip.nip.io )+++++++++++++++++++
+		2. Expongas el puerto de Logstash en todo tu cluster++++++++++
+		2. Valida el funcionamiento de Logspout -> Logstash -> Elasticsearch <- Kibana consultando logs de tus contenedores.+++++++++
+		2. Accede a los logs del wordpress (visítalo para generar nuevos logs)+++++++
+	1. Mira la documentación de Logspout para forzar que sólo se loguen los contenedores/servicios que elijas (Traefik, Portainer y Wordpress+MySQL)+++ (definimos la variable LOGSPOUT='ignore' en los que no queremos loguear)
+	1. Reconfigura Logstash para que tenga 2 listeners, 1 tipo Syslog y otro JSON *+++++++
+		2. Configura el syslog de tus máquinas para que envíen los logs a "localhost:puertoddelsyslog"++
+		2. Observa los logs del sistema en Kibana++
+	1. Crea un filtro de logs para Logstash que aplique los filtros de log de apache a los logs que provengan de tu Wordpress mediante el uso de GROK ---> Ver Links arriba+
+		2. Verifica que los logs de web están ahora debidamente parseados+
+	1. Envía logs a Logstash con Filebeat
+		2. Descarga un log de ejemplo de Apache
+		2. Arranca un contenedor de Filebeat que envíe los logs a IPPUBLICA:PUERTODELLOGSTASH:
+			3. Envía éste log: https://raw.githubusercontent.com/elastic/examples/master/Common%20Data%20Formats/apache_logs/apache_logs
+		2. Verifica que se han enviado los logs
+
+--------------------------------------------------
+Configuración de Logstash para cumplir con los objetivos anteriores (se publicará a las 21:30):
+
+#!/bin/bash
+apt update
+apt -y install git
+
+git clone https://github.com/kpeiruza/docker-stacks
+cd docker-stacks/logspout-elk
+
+sed -i -e "s:\$.\+NAME}:/srv/docker/volumes:" stack.yaml
+sed -i -e "s:\$.\+URL}:kibana.$(ip -4 a show dev TUDISPOSITIVODERED | awk '/inet/ {print $2}' | cut -d / -f1 ).nip.io:" stack.yaml
+cp files/logstash.conf /srv/docker/volumes/logstash/config
+
+echo 'vm.max_map_count=262144' >> /etc/sysctl.conf ; sysctl -p
+grep /srv/docker stack.yaml  | cut -d : -f1 | awk '{print $2}' | xargs mkdir -m 1777 -p
+
+
+----------------------
+
+
+input {
+  udp {
+    port  => 5000
+    codec => json
+    tags => [ 'contenidor', 'swarm' ]
+  }
+  syslog {
+    port => 5001
+    codec => cef
+    tags => [ 'log514', 'sistemes' ]
+  }
+}
+
+filter {
+  if [docker][image] =~ /logstash/ {
+    drop { }
+  }
+
+  if [docker][image] =~ /wordpress/ {
+    grok {
+      match => { "message" => ["%{HTTPD_COMBINEDLOG}"] }
+      remove_field => "message"
+    }
+  }
+
+}
+----------------------------------
+
+__
+input {
+  udp {
+    port  => 5000
+    codec => json
+    tags => ['containers','swarm']
+  }
+  syslog {
+        port => 5001
+        codec => cef
+        tags => ['logs_514','sistemas']
+}
+
+}
+
+filter {
+  if [docker][image] =~ /logstash/ {
+    drop { }
+  }
+  if [type] == "syslog" {
+    grok {
+      match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
+      add_field => [ "received_at", "%{@timestamp}" ]
+      add_field => [ "received_from", "%{host}" ]
+    }
+}
+  if [docker][image] =~ /wordpress/ {
+    grok {
+      match => { "message" => ["%{HTTPD_COMBINEDLOG}"] }
+      remove_field => "message"
+    }
+}
+}
+output {
+  elasticsearch { hosts => ["elasticsearch:9200"] }
+}
+
+https://www.elastic.co/guide/en/logstash/current/config-examples.html
+
+

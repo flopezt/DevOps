@@ -1,0 +1,38 @@
+https://docs.docker.com/machine/
+https://docs.docker.com/machine/get-started/
+Crear Swarm con Docker-machine: https://docs.yugabyte.com/latest/deploy/docker-swarm/
+Desplegar en EC2: https://docs.docker.com/machine/examples/aws/
+
+------
+100$ 2 months DigitalOcean referal. Si alguien tiene otro referal que lo ponga asi ganamos todos :)
+https://m.do.co/c/2cb1a2a5d99b
+
+Extra Kubernetes + Gitlab:
+    Every new Google Cloud Platform (GCP) account receives $300 in credit upon sign up. In partnership with Google, GitLab is able to offer an additional $200 for both new and existing GCP accounts to get started with GitLab's Google Kubernetes Engine Integration.
+------
+
+docker-machine create --driver digitalocean --digitalocean-access-token xxxxx docker-sandbox
+docker-machine create --driver virtualbox default
+docker-machine create --driver amazonec2 --amazonec2-access-key AKI******* --amazonec2-secret-key 8T93C*******  aws-sandbox
+
+docker-machine create \
+  --driver generic \
+  --generic-ip-address=203.0.113.81 \
+  --generic-ssh-key ~/.ssh/id_rsa \
+  vm
+-----------------------
+
+base=https://github.com/docker/machine/releases/download/v0.16.0 &&  curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/usr/local/bin/docker-machine &&  chmod+x /usr/local/bin/docker-machine
+
+http://github.com/boot2docker/boot2docker/releases/download/v18.09.3/boot2docker.iso
+$HOME/.docker/machine/cache/boot2docker.iso
+-------------
+
+Ejemplo DigitalOcean:
+    docker-machine create -d digitalocean --digitalocean-access-token=xxx --digitalocean-image=centos-7-x64 --digitalocean-region=lon1 --digitalocean-size "s-2vcpu-2gb" --digitalocean-private-networking --engine-label public=no db01
+docker-machine create maquina1
+docker-machine create maquina2
+
+
+
+

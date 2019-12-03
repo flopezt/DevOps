@@ -1,0 +1,144 @@
+http://Vagrantup.com
+
+Recursos:
+    https://vagrantcloud.com/boxes/search
+    https://www.vagrantup.com/docs/virtualbox/networking.html
+
+Lab 0:
+    
+Desplega un LAMP:
+    
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/buster64"
+  config.vm.provision :shell, path: "bootstrap.sh"
+  config.vm.network :forwarded_port, guest: 80, host: 8880
+#  config.vm.box_url = "https://vagrantcloud.com/hashicorp/precise64"
+end
+
+
+
+Provisioners: https://www.vagrantup.com/docs/provisioning/file.html
+
+sudo apt update
+sudo apt install -y mariadb-server mariadb-client
+sudo apt install -y apache2 apache2-utils
+
+
+>>>>>>>>>>>>>>>>>>> Ja ho tens????? 
+
+debconf-set-selections
+
+Lab1:
+Instalar vagrant (apt install vagrant)
+
+https://www.vagrantup.com/intro/getting-starrmted/
+
+cd 
+mkdir -p ~/MyVagrants/example{1..5}
+cd ~/MyVagrants/example1
+vagrant init hashicorp/precise64
+vagrant up
+
+vagrant box list  --> para ver las VM activas
+
+Mirar el subdirectorio .vagrant
+
+vagrant ssh
+cd /vagrant
+touch hola.mundo
+exit
+ls
+vagrant shutdown/suspend/resume/destroy/ssh-config...
+----------------------------------------------------------------
+
+Lab 2:
+
+Despleguem múltiples màquines amb Vagrant:
+
+$sshinit = <<SCRIPT
+touch /hola-caracola.txt
+SCRIPT
+
+# Buster, please
+Vagrant.configure(2) do |config|
+  config.vm.define "debian1" do |config|
+    config.vm.box = "debian/stretch64"
+    config.vm.hostname = "debian1"
+    config.vm.provision "shell", inline: $sshinit
+  end
+
+  config.vm.define "debian2" do |config|
+    config.vm.box = "debian/stretch64"
+[debian]
+debian1        ansible_host=127.0.0.1 ansible_ssh_port=2222 ansible_ssh_user=root
+debian2        ansible_host=127.0.0.1 ansible_ssh_port=2200 ansible_ssh_user=vagrant
+
+[centos]
+centos1        ansible_host=127.0.0.1 ansible_ssh_port=2201 ansible_ssh_user=vagrant
+    config.vm.hostname = "debian2"
+    config.vm.provision "shell", inline: $sshinit
+  end
+
+  config.vm.define "centos1" do |config|
+    config.vm.box = "centos/7"
+    config.vm.hostname = "centos1"
+    config.vm.provision "shell", inline: $sshinit
+  end
+
+# Bionic, please
+  config.vm.define "ubuntu1" do |config|
+    config.vm.box = "ubuntu/xenial64"
+    config.vm.hostname = "ubuntu1"
+    config.vm.provision "shell", inline: $sshinit
+  end
+
+
+end
+    
+    
+    
+    -------------------------------------------------------------------------------------------------------------
+LABORATORI PEL ANSIBLE: <<<<<-------- MODIFICA LA CLAU SSH, LENYE
+        
+    $sshinit = <<SCRIPT
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDTtgivkQCz8dO97XfmwNOw/RS9QP85Ccdaq37ZdUTHucSTAyEJSTmMFqLTwf5F/1feNtBinEmgKguRT2UH1TSmejBggfG5MQvCYBBxENvN/y616aNLp5UjyJQuB4TPeCV1v2ll9a8mG9PmtJVNikw4o7ROzDP54endIlDTkr8lJrtg41GfnptVnZ0NqVFrs6815G950p6hYAEfyCthI8/Gr6SaJ0yIK+s2wQZ7XTRs0xAwpFKDZIUzLk2SHr+kRPgISV8Hesw1SUjbUpXkYzrbLeXVNYxN+hDsViwQD35jC2+v45/QM3sIRTLqvXadjC3r5zCvW7lw51+bLnS5eLrB devops@xxx.pfx.lan" >> /home/vagrant/.ssh/authorized_keys
+SCRIPT
+
+# Buster, please
+Vagrant.configure(2) do |config|
+  config.vm.define "debian1" do |config|
+    config.vm.box = "debian/buster64"
+    config.vm.hostname = "debian1"
+    config.vm.provision "shell", inline: $sshinit
+  end
+
+  config.vm.define "debian2" do |config|
+    config.vm.box = "debian/buster64"
+    config.vm.hostname = "debian2"
+    config.vm.provision "shell", inline: $sshinit
+  end
+
+  config.vm.define "centos1" do |config|
+    config.vm.box = "centos/7"
+    config.vm.hostname = "centos1"
+    config.vm.provision "shell", inline: $sshinit
+  end
+
+  config.vm.define "ubuntu1" do |config|
+    config.vm.box = "ubuntu/bionic64"
+    config.vm.hostname = "ubuntu1"
+    config.vm.provision "shell", inline: $sshinit
+  end
+
+
+end
+----------------------------------------------------------------------
+
+https://github.com/oracle/vagrant-boxes/tree/master/Kubernetes
+
+
+https://www.packer.io/docs/builders/virtualbox-iso.html
+
+
+
+

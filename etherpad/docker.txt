@@ -1,0 +1,92 @@
+Lectures:
+    
+what you need to know about docker pdf -> https://github.com/gtsdockeriopour/docker-tips/blob/master/WHAT_YOU_NEED_TO_KNOW_ABOUT_DOCKER.pdf
+
+https://12factor.net/
+
+---------------------------------------------------------------------------
+
+docker ps
+docker ps -qa
+docker inspect dockername       #json del container
+docker logs [ -f ] dockername
+docker images
+docker  volume create oriol
+docker run -ti -v oriol:/dades centos
+docker run -d -v /var/lib/mysql:/var/lib/mysql --name chupalocal -p 3306:3306 mysql:5.7
+docker search      #busca en el repo [dockerhub]
+
+
+ELK:
+     
+   docker run -d -p 5601:5601 -p 9200:9200 -p 5044:5044 -it --name elk sebp/elk
+   
+Wordpress + MySQL:
+
+  docker run -d -v wpdb:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=penoso -e MYSQL_USER=wordpresito -e MYSQL_PASSWORD=wppass -e
+   MYSQL_DATABASE=pornhub --name mibbdd   mysql:5.7
+  docker run -d --link mibbdd:mysql -p 8080:80 wordpress
+
+
+
+   
+   docker run [-p port_ext:port_int] [-e var=value] [ -ti / -d ]
+   docker ps [ -q / -a / -l ]
+   docker volume [ ls / rm / create ] https://devops-2019-4t.pad.floss.cat/p/docker
+   docker logs [-f]
+
+ docker image
+ docker rmi
+ 
+ docker rm -f
+ docker kill 
+ docker stop
+
+------------------------
+
+docker top CONTAINER
+docker stats
+
+
+-------------------------
+Automated builds con Dockerfile:
+
+FROM library/debian:latest
+LABEL MAINTAINER="kenneth@floss.cat"
+#        Default ENTRYPOINT -> /bin/sh -c
+ENTRYPOINT [ "/bin/ping", "-c", "5" ]
+CMD [ "8.8.8.8" ]
+
+#        ENTRYPOINT + CMD
+
+
+
+CONSTRUCCIÓN DE UNA IMAGEN DE DOCKER
+
+
+---
+
+https://docs.docker.com/engine/reference/builder/
+
+Ejemplo de Dockerfile con 2 FROM, uno de compilar y el otro de runtime: https://github.com/kpeiruza/logspout-multiline-gelf/blob/master/Dockerfile
+Ejemplo de aplicación PHP: https://github.com/kpeiruza/docker-hashtopolis-server/blob/master/Dockerfile
+
+--------------------------------------------------------------------------------------------------------------------
+Bueno
+      https://github.com/stilliard/docker-pure-ftpd/blob/master/Dockerfile     <---- abusa de runs, pero bastante Ok y buen ejemplo de "2 stages" de Build
+	* https://github.com/orangesignal/docker-sonarqube/blob/master/4.4/Dockerfile <--- bien agrupado
+	* https://github.com/bitnami/bitnami-docker-kafka hmmmmmm, aceptamos pulpo
+	* https://github.com/DevExpress/testcafe/blob/master/docker/Dockerfile
+	* https://hub.docker.com/r/dperson/torproxy/dockerfile
+	* https://hub.docker.com/r/chriswayg/tor-alpine/dockerfile Ole, flipada :-)
+	* https://github.com/docker-library/httpd/blob/master/2.4/Dockerfile
+	* https://bitbucket.org/thiagofanfoni/teampass/src/master/Dockerfile
+	* https://github.com/nginxinc/nginx-prometheus-exporter/blob/master/Dockerfile <---- ben fet
+	* 
+Malos:
+	* https://hub.docker.com/r/jasonrivers/nagios/dockerfile Malo pero con alguna cosa decente
+	* https://github.com/kstaken/dockerfile-examples/blob/master/salt-master/Dockerfile <<----- Si lo pilláis, le podéis partir las rodillas de mi parte :-)
+	* https://hub.docker.com/r/nginxboilerplate/nginx-boilerplate/dockerfile
+	* https://hub.docker.com/r/dockerfiles/centos-lamp/dockerfile
+	* https://github.com/docker-library/tomcat/blob/master/Dockerfile-apt.template
+

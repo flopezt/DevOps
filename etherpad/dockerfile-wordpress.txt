@@ -1,0 +1,9 @@
+lRuben: https://github.com/mysql/mysql-docker/blob/mysql-server/8.0/Dockerfile T'has colat!
+Víctor Ozaes:https://gitlab.com/vicvom/docker-wordpress/blob/master/Dockerfile Prou bé
+llorens: https://github.com/llorenslp/wordpress Prou bé
+Issam https://github.com/issammartos/wordpress-devops-test/blob/master/Dockerfile Millorable però com a mínim activa el rewrite :-)
+jose https://github.com/jisbcnes/jis/blob/master/Dockerfile Millorable, però com a mínim posa les dependències de PHP més habituals :-)
+Salva: https://github.com/sibizaestruch/lpic-devops-course/blob/master/wp-image/Dockerfile Falta el EXPOSE!!!!ª!
+Fer: https://github.com/F8aAr/pue-curso/blob/master/Dockerfile  Mmmmmm casi museístico (por viejo :-P)
+Cristian: https://github.com/cramy3/wordpress/tree/master
+

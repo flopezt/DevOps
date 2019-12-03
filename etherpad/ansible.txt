@@ -1,0 +1,235 @@
+https://github.com/kpeiruza/ansible
+
+0) Instal·la Ansible+++
+1) Crea claus SSH+++
+2) Desplega el laboratori amb Vagrant (veure link anterior a l'índex)+++
+3) Crea un /etc/ansible/hosts amb la definició de les teves màquines:++ +
+    
+[debian]
+debian1        ansible_host=127.0.0.1 ansible_ssh_port=2222 ansible_ssh_user=root
+debian2        ansible_host=127.0.0.1 ansible_ssh_port=2200 ansible_ssh_user=vagrant
+
+[centos]
+centos1        ansible_host=127.0.0.1 ansible_ssh_port=2201 ansible_ssh_user=vagrant
+.......
+( falta definir la Ubuntu i quelcom que les agrupi a totes  "laboratori" )
+
+4) T'ha funcionat "ansible -m ping all" i " ansible -m ping laboratori" ? +++++
+
+Si vols evitar els warnings del SSH i ets massa gos com per a arreglar-ho correctament:
+/etc/ssh/ssh_config 
+Host 127.0.0.1
+  StrictHostKeyChecking no
+--------------------------------------------
+/etc/ansible/hosts:
+[debian]
+debian1 ansible_host=127.0.0.1 ansible_ssh_port=2222 ansible_ssh_user=root
+debian2 ansible_host=127.0.0.1 ansible_ssh_port=2200 ansible_ssh_user=vagrant
+
+[centos]
+centos1 ansible_host=127.0.0.1 ansible_ssh_port=2201 ansible_ssh_user=vagrant
+
+[ubuntu]
+ubuntu1 ansible_host=127.0.0.1 ansible_ssh_port=2202 ansible_ssh_user=vagrant
+
+[centosfamily:children]
+centos
+
+[debianfamily:children]
+debian
+ubuntu
+
+[laboratorio:children]
+centosfamily
+debianfamily
+
+
+----------------------------------------------------
+5) Crea 2 Playbooks (yamls):
+  - Actualitzar els sistemes amb APT++++++
+  
+  
+  - Actualitzar els sistemes amb YUM++++++
+
+----
+
+- hosts: all
+  tasks:
+    - name: Safe Upgrade
+      yum:
+      name='*'
+      state=latest
+
+
+
+
+
+6) Crea 1 playbook per a executar a totes les màquines, i que en funció de la família de sistema operatiu, faci upgrade amb APT o amb YUM+++++++
+Ejemplo git: https://github.com/F8aAr/ansible-pue
+---------------------------------------------------
+
+- name: copy APT sources list
+  copy: src={{ansible_distribution_release}}-sources.list dest=/etc/apt/sources.list
+    owner=root mode=644 force=yes
+
+- name: update apt list
+  apt: update-cache=yes
+
+- name: install debian/APT specific packages
+  apt: pkg={{item}} state=latest update_cache=false
+  with_items:
+    - apt-listchanges
+    - pwgen
+    - ssl-cert
+    - ssh
+    - openssh-server
+    - vim-nox
+    - ntp
+    - ntpdate
+    - rkhunter
+    - binutils
+    - openssl
+    - sudo
+    - git-core
+    - fail2ban
+
+----------------------------------
+
+AVISA AL PROFE
+
+7) Crea dos rols, un per a update APT i un altre per a update YUM, i modifica el teu playbook perquè faci servir els rols++
+
+- hosts: all
+  roles:
+    - base-debian
+    - ssl-cert
+    - lamp
+    - fail2ban
+    - pureftpd
+
+-------------------------------------------------------------------
+
+7.1) Crea un usuari "pepito" amb sudo i li endolles la teva clau SSH :-)
+7.2) Esborra l'usuari "pepito" del sistema
+7.3) Crea el grup "dimonis"
+7.4) Afegeix els usuaris www-data, irc i list al grup dimonis (o uns altres 3 usuaris si aquests no els tens al teu sistema)
+------------
+8) Playbook+Rols per a desplegar Apache + PHP + Wordpress a Debian (configurat amb les variables de l'inventari: ServerName i DocumentRoot)
+9) Playbook + Rols per a desplegar MySQL a CentOS (configurat amb les variables de l'inventari: root password)
+10) Migra els passwords emprats al rol de MySQL per tal d'emprar ansible-vault
+
+-------------------------------------------------------------------------------------------------------------------------------------
+Llamando a un rol:
+    
+
+Estructura de un rol:
+    
+
+kenneth@mil:~/Nextcloud/Work/ansible/roles/base-debian$
+
+./tasks/main.yaml
+- name: copy APT sources list
+  copy: src={{ansible_distribution_release}}-sources.list dest=/etc/apt/sources.list
+    owner=root mode=644 force=yes
+
+- name: update apt list
+  apt: update-cache=yes
+
+- name: install debian/APT specific packages
+  apt: pkg={{item}} state=latest update_cache=false
+  with_items:
+    - apt-listchanges
+    - pwgen
+    - ssl-cert
+    - ssh
+    - openssh-server
+    - vim-nox
+    - ntp
+    - ntpdate
+    - rkhunter
+    - binutils
+    - openssl
+    - sudo
+    - git-core
+    - fail2ban
+./files/stretch-sources.list
+deb http://ftp.fr.debian.org/debian/ stretch main contrib non-free
+deb-src http://ftp.fr.debian.org/debian/ stretch main contrib non-free
+
+deb http://security.debian.org/ stretch/updates main contrib non-free
+deb-src http://security.debian.org/ stretch/updates main contrib non-free
+
+# stretch-updates, previously known as 'volatile'
+deb http://ftp.fr.debian.org/debian/ stretch-updates main contrib non-free
+deb-src http://ftp.fr.debian.org/debian/ stretch-updates main contrib non-free
+./files/wheezy-sources.list
+deb http://ftp.fr.debian.org/debian/ wheezy main contrib non-free
+deb-src http://ftp.fr.debian.org/debian/ wheezy main contrib non-free
+
+deb http://security.debian.org/ wheezy/updates main contrib non-free
+deb-src http://security.debian.org/ wheezy/updates main contrib non-free
+
+# wheezy-updates, previously known as 'volatile'
+deb http://ftp.fr.debian.org/debian/ wheezy-updates main contrib non-free
+deb-src http://ftp.fr.debian.org/debian/ wheezy-updates main contrib non-free
+./files/jessie-sources.list
+deb http://ftp.fr.debian.org/debian/ jessie main contrib non-free
+deb-src http://ftp.fr.debian.org/debian/ jessie main contrib non-free
+
+deb http://security.debian.org/ jessie/updates main contrib non-free
+deb-src http://security.debian.org/ jessie/updates main contrib non-free
+
+# jessie-updates, previously known as 'volatile'
+deb http://ftp.fr.debian.org/debian/ jessie-updates main contrib non-free
+deb-src http://ftp.fr.debian.org/debian/ jessie-updates main contrib non-free
+./meta/main.yaml
+dependencies:
+  - { role: base-system }
+
+
+---------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

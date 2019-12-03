@@ -1,0 +1,82 @@
+https://git-scm.com/docs/gittutorial
+https://www.atlassian.com/git/tutorials/saving-changes/git-diff
+
+historia del control de versiones 
+RCS --> CVS --> Subversion --> Hg --> GIT 
+
+	* git para todos
+		* init
+		* add / rm / mv
+		* clone
+		* checkout
+		* commit
+		* push
+	* git con más chicha
+		* status
+		* pull
+		* stash & stash pop
+		* log
+		* config
+		* merge
+			* Estando en dev y habiendo hecho cambios ....
+			* git checkout master
+			* git merge dev
+			* git commit -am "Mensajito del commit del merge"docker run --user 1000:999 --name jenkins -d -v /var/run/docker.sock:/var/run/docker.sock -v /srv/jenkins:/var/jenkins_home -p 8080:8080 jenkins/jenkins
+			* git push <---------- enviamos cambios al servidor
+		* fetch
+		* diff
+		* tag
+		* branch: 
+		* reset
+		* clean: se cepilla los archivos que no están en la revisión actual
+
+mkdir testgit
+cd testgit
+git init
+git status 
+echo hola > caracola
+git add caracola 
+git status
+git commit 
+git log
+git tag app-1.0 fe663a501d1 <---- algunos de los primeros chars vistos en el "git log" para el commit
+git status
+git log
+echo caca >ruta
+git commit -am "mi cacaruta"
+git add ruta
+git commit -am "mi cacaruta"
+git rm caracola 
+git commit -m "qué pasó?"
+ls
+git log
+rm ruta 
+git status
+git checkout ruta
+git checkout c4fdb3ef659b71af0b8c12aced8f699810c93c28 caracola
+---------------------------------
+
+
+kenneth@mil:/tmp/caca$ git branch pepe
+kenneth@mil:/tmp/caca$ git status
+On branch master
+nothing to commit, working tree clean
+kenneth@mil:/tmp/caca$ git checkout pepe
+Switched to branch 'pepe'
+kenneth@mil:/tmp/caca$ ls
+ruta
+kenneth@mil:/tmp/caca$ echo hola>caracola
+kenneth@mil:/tmp/caca$ git add caracola 
+kenneth@mil:/tmp/caca$ git commit -m "caracola en rama pepe"
+[pepe 5fd3f89] caracola en rama pepe
+ 1 file changed, 1 insertion(+)
+ create mode 100644 caracola
+kenneth@mil:/tmp/caca$ ls
+caracola  ruta
+kenneth@mil:/tmp/caca$ git checkout master
+Switched to branch 'master'
+kenneth@mil:/tmp/caca$ ls
+ruta
+-----------------------
+
+

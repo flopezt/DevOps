@@ -1,0 +1,271 @@
+Install docker-compose
+
+Què és?
+https://docs.docker.com/compose/
+
+Quina sintaxi té?
+
+
+
+
+https://docs.docker.com/compose/wordpress/
+
+
+docker stack ls
+docker service ls
+docker service ls -f name=wpbe
+docker stack deploy -c docker-compose.yaml wpps
+docker stack ls
+docker services 
+docker service ls
+docker service ls -f name=wpps
+docker service ps wpps_wordpress
+docker service scale wpps_wordpress=5
+docker service ps wpps_wordpress
+docker stack ls
+docker stack rm wpbe
+docker stack rm wpps
+
+--------------------------------------------------------
+Sessió 1/10/2019:
+
+Objectius:
+	* Familiaritzar-se amb els conceptes de Serveis i Docker Swarm
+		* Comprendre la importància de separar execució de Storage
+		* Aprendre a emprar Redis per a persistir sessions entre múltiples servidors
+		* Veure Portainer :-)
+		* Aprendre a visualitzar logs de serveis enlloc de logs de contenidors
+		* Determinar el lloc d'execució d'un contenidor
+		* Visualitzar l'estat d'un cluster Swarm
+----------------------------------------------------
+Tasques:
+
+	1. Valida que funciona el cluster (docker node ...)++++++++++++++++
+	1. Valida que el NFS està operatiu+++++++++++++++++
+	1. Deixa el teu hostname com 10 mana, i posa el teu nom i el dels companys del cluster a /etc/hosts ( p.e. lluis.ljc.lan )+++++++++++
+	1. Agafa el docker-compose del wordpress i desplega'l amb docker stack deploy+++++++++++
+	1. Atura el stack i torna a engegar-lo. Segueix configurat?+++++++++++
+		2. Modifica el Stack perquè les dades de la BBDD apuntin al NFS ( /var/lib/mysql )++++++++++++
+		2. Torna a provar fins que persisteixi el setup+++++++++++++
+		2. Verifica en quin node s'està executant cada contenidor++++++++++++
+		2. Analitza la sortida dels logs dels contenidors (docker service logs)+++++++++++
+	1. Desplega el Stack de Portainer +++++++++
+		2. Avisa al profe :-P++++
+		2. Clona https://github.com/kpeiruza/docker-stacks +++++++++
+		2. Adapta el yaml perquè tingui persistència de dades al NFS+++++++++
+		2. Verifica que funciona, connectant-te al Portainer i jugant-hi una estona :-)++++++++
+	1. Desconnecta 1 dels nodes del cluster que tingui algun workload (p.e. la BBDD del wordpress)++++++
+		2. Verifica que tot just desconnectar, falla++++++++
+		2. Verifica que es reassigna el contenidor a un nou node de manera automàtica+++++++
+	1. Escala els serveis frontals del Wordpress+++++++++++
+		2. Verifica que s'està accedint a diferents contenidors mitjançant "docker service logs"+++++++
+	1. Cerca un Redis (idealment, cluster) per a Docker Swarm i desplega'l ++++
+		2. Demana al profe una aplicació demo que empri Sessions PHP+Redis --> https://github.com/kpeiruza/docker-php-mysql-redis/ ++++++++
+		2. Verifica que podem escalar el servei de PHP, però que la sessió no persisteix ++++++
+		2. Desplega el Redis ++++++
+		2. Llença la App amb un contenidor que tingui les sessions de PHP al redis ++++++
+		2. Torna a validar que la sessió persisteix ++++++
+
+Qui no acabi, pagarà el beure :-P
+
+Si ho acabes tot:
+	* Avisa al profe :-)
+	* Cerca i prova Stacks de ELK i Prometheus + Grafana
+
+----------------------------------------------------------------------------------------------------------------
+
+Desplegar MySQL (si ja tens bé el NFS):
+
+mkdir -p /srv/docker/wp/mysql
+chmod 1777 !$
+docker stack deploy -c arxiuaquiabaix.yaml wp
+
+----
+
+version: '3.3'
+
+services:
+   db:
+     image: mysql:5.7
+     volumes:
+       - /srv/docker/wp/mysql:/var/lib/mysql
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: somewordpress
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: wordpress
+
+   wordpress:
+     depends_on:
+       - db
+     image: wordpress:latest
+     ports:
+       - "8000:80"
+     restart: always
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_USER: wordpress
+       WORDPRESS_DB_PASSWORD: wordpress
+       WORDPRESS_DB_NAME: wordpress
+#volumes:
+ #   db_data: {}
+--------------------------------------------------------------
+TRAEFIK:
+    
+docker network create proxy --driver overlay
+
+version: '3.5'
+
+services:
+  traefik:
+    image: library/traefik:1.7
+    command: 
+      - "--api"
+      - "--entrypoints=Name:http Address::80"
+      - "--entrypoints=Name:https Address::443 TLS"
+      - "--defaultentrypoints=http,https"
+      - "--docker"
+      - "--docker.swarmmode"
+      - "--docker.watch"
+    networks:
+      - proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+networks:
+  proxy:
+    external: true
+
+PORTAINER:
+
+version: '3.4'
+
+services:
+  portainer:
+    image: portainer/portainer
+    command: '-H "tcp://tasks.agent:9001" --tlsskipverify'
+    ports:
+      - 9000:9000
+    networks:
+      - proxy
+      - portainer_agent
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /srv/docker/portainer:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        traefik.port: 9000
+        traefik.frontend.rule: "Host:portainer.ibv.pue.192.168.20.217.nip.io"
+        traefik.docker.network: 'proxy'
+      placement:
+        constraints: [node.role == manager]
+    
+  agent:
+    image: portainer/agent
+    environment:
+      AGENT_CLUSTER_ADDR: tasks.agent
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - target: 9001
+        published: 9001
+        protocol: tcp
+        mode: host
+    networks:
+      - portainer_agent
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.platform.os == linux]
+
+
+
+networks:
+  portainer_agent:
+    external: true
+  proxy:
+    external: true
+
+
+README para novatos
+    
+copiar https://github.com/kpeiruza/docker-php-mysql-redis/
+docker build . -t phpredis:latest
+docker login
+docker tag <id_imagen> user_git/phpredis:latest
+docker push user_git/phpredis:latest
+generar el yaml apache-php-redis y redis.
+APACHE-PHP-REDIS:
+   
+version: '3.7'
+
+services:
+  phpderedis:
+    image: issammartos/phpredis:latest
+    restart: always
+    ports: 
+      - "8888:80"
+    networks:
+      - redis
+
+networks:
+  redis:
+    external: true
+
+REDIS:
+
+version: '3.7'
+
+services:
+
+  redis:
+    image: library/redis
+    networks:
+      - redis
+
+networks:
+  redis:
+    external: true
+-----------------------------------------------------------------------------
+version: '3.7'
+
+services:
+  redis:
+    image: redis
+    networks:
+      - redis
+  web:
+    image: kpeiruza/docker-php-mysql-redish
+    networks:
+      - redis
+      - proxy
+    deploy:
+      labels:
+        traefik.port: 80
+        traefik.frontend.rule: 'Host:webapp.192.168.20.214.nip.io'
+        traefik.docker.network: 'proxy'
+
+networks:
+  redis:
+    driver: 'overlay'
+  proxy:
+    external: true
+
+
+
+docker stack deploy -c APACHE-PHP-REDIS.yaml apache-php-redis
+docker stack deploy -c redis.yaml redis
+
+http://webapp.192.168.20.219.nip.io/
+
+

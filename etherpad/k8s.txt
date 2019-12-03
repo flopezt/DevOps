@@ -1,0 +1,40 @@
+1.- INSTALA Minikube: https://kubernetes.io/docs/tasks/tools/install-minikube/
+2.- Piedra de Rosetta de Kubectl para usuarios de Docker: https://kubernetes.io/docs/reference/kubectl/docker-cli-to-kubectl/
+
+Artículo K8s: https://medium.com/@geraldcroes/kubernetes-traefik-101-when-simplicity-matters-957eeede2cf8
+	* Instalar con Kubeadm (atención al "taint nodes"): 
+		* https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+		* https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+
+ Arquitectura:
+Prácticas:
+    
+	1. Laboratorios en Katacoda: https://katacoda.com <--- Biju, mira aquí :-) U_u
+		2. Base:
+			3. Launch A Single Node Cluster
+			3. Launch a multi-node cluster using Kubeadm
+			3. Deploy Containers Using YAML
+			3. Deploy Guestbook Web App Example
+			3. Create Ingress Routing
+			3. Use Kubernetes To Manage Secrets And Passwords
+		2. Extra:
+			3. Liveness and Readiness Healthchecks
+			3. Logging with EFK
+			3. Helm Package Manager
+		2. Per a repassar: First Steps To Becoming Certified Kubernetes Application Developer
+	1. Despliegue con Minikube
+		2. Despliegue de app de ejemplo
+	1. Montar 1 cluster 1 master + 2 workers con Kubeadm
+	1. Desplegar Helm y Aplicaciones:
+		2. Instalar Helm
+		2. Wordpress+MySQL
+		2. Traefik Ingress Controller (30080, 30443)
+			3. Reconfigurar WP para que utilice Traefik
+		2. Nginx Ingress Controller (80 & 443)
+			3. Reconfigurar WP para que utilice Nginx
+		2. Prometheus Operator
+	1. Continuamos con Prometheus y Grafana en el siguiente punto
+
+
+
+
